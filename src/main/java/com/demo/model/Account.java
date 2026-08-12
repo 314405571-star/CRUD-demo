@@ -1,27 +1,29 @@
 package com.demo.model;
 
-import jakarta.persistence.*;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-@Entity
-@Table(name = "account")
+@TableName("account")
 public class Account {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @TableId(type = IdType.AUTO)
     private Long id;
 
-    @Column(name = "name", nullable = false, length = 50)
+    @TableField("name")
     private String name;
 
-    @Column(name = "balance", precision = 12, scale = 2)
+    @TableField("balance")
     private BigDecimal balance;
 
-    @Column(name = "type", length = 20)
+    @TableField("type")
     private String type;
 
-    @Column(name = "create_time")
+    @TableField("create_time")
     private LocalDateTime createTime;
 
     public Account() {}

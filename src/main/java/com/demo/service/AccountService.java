@@ -1,41 +1,36 @@
 package com.demo.service;
+
+import com.demo.mapper.AccountMapper;
 import com.demo.model.Account;
-import com.demo.repository.AccountRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
-import java.util.Optional;
+
 @Service
 public class AccountService {
     @Autowired
-    private AccountRepository repository;
+    private AccountMapper mapper;
     public List<Account> findAll() {
-        return repository.findAll();
+        return mapper.selectList(null);
     }
-    public Optional<Account> findById(Long id) {
-        return repository.findById(id);
+    public Account findById(Long id) {
+        return mapper.selectById(id);
     }
     public Account create(Account account) {
-        return repository.save(account);
+        mapper.insert(account);
+        return account;
     }
-
     public Account update(Long id, Account account) {
-        Optional<Account> optional = repository.findById(id);
-        if (optional.isPresent()) {
-            Account existing = optional.get();
-            existing.setName(account.getName());
-            existing.setBalance(account.getBalance());
-            existing.setType(account.getType());
-            return repository.save(existing);
+        Account existing = mapper.selectById(id);
+        if (existing != null) {
+            account.setId(id);
+            mapper.updateById(account);
+            return mapper.selectById(id);
         }
         return null;
     }
-
     public boolean delete(Long id) {
-        if (repository.existsById(id)) {
-            repository.deleteById(id);
-            return true;
-        }
-        return false;
+        return mapper.deleteById(id) > 0;
     }
 }

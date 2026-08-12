@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/accounts")
@@ -16,16 +15,16 @@ public class AccountController {
     @Autowired
     private AccountService service;
 
-    @GetMapping
+    @PostMapping("/list")
     public List<Account> getAll() {
         return service.findAll();
     }
 
-    @GetMapping("/{id}")
+    @PostMapping("/{id}/get")
     public ResponseEntity<Account> getById(@PathVariable Long id) {
-        Optional<Account> optional = service.findById(id);
-        if (optional.isPresent()) {
-            return ResponseEntity.ok(optional.get());
+        Account account = service.findById(id);
+        if (account != null) {
+            return ResponseEntity.ok(account);
         } else {
             return ResponseEntity.notFound().build();
         }
@@ -36,7 +35,7 @@ public class AccountController {
         return service.create(account);
     }
 
-    @PutMapping("/{id}")
+    @PostMapping("/{id}/update")
     public ResponseEntity<Account> update(@PathVariable Long id,
                                           @RequestBody Account account) {
         Account updated = service.update(id, account);
@@ -47,7 +46,7 @@ public class AccountController {
         }
     }
 
-    @DeleteMapping("/{id}")
+    @PostMapping("/{id}/delete")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         boolean deleted = service.delete(id);
         if (deleted) {
